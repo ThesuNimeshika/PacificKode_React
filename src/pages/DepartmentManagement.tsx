@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GlassCard from '../components/GlassCard';
 import { api } from '../services/api';
-import { Plus, Edit2, Trash2, X, Check } from 'lucide-react';
+import { Plus, Edit2, Trash2, Check, LayoutGrid } from 'lucide-react';
 
 interface Department {
     departmentId: number;
@@ -51,103 +51,103 @@ const DepartmentManagement: React.FC = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto p-6">
-            <header className="flex justify-between items-center mb-10">
+        <div className="container-space animate-cinematic">
+            <header className="flex justify-between items-end mb-16 px-4">
                 <div>
-                    <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400">
+                    <h1 className="text-5xl font-black text-white tracking-tighter flex items-center gap-6">
+                        <LayoutGrid className="text-cyan-400" size={48} />
                         Departments
                     </h1>
-                    <p className="text-gray-400 mt-2">Manage organizational structure</p>
+                    <p className="text-cyan-500/40 font-bold mt-4 tracking-[0.4em] uppercase text-[10px]">Structure Matrix</p>
                 </div>
                 {!isEditing && (
                     <button
                         onClick={() => { setIsEditing(true); setCurrentDept({}); }}
-                        className="glass-button flex items-center gap-2"
+                        className="glass-button"
                     >
-                        <Plus size={20} /> Add Department
+                        <Plus size={20} /> Initialize Unit
                     </button>
                 )}
             </header>
 
             {isEditing && (
-                <GlassCard title={currentDept.departmentId ? 'Edit Department' : 'New Department'}>
-                    <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-400">Department Code</label>
-                            <input
-                                required
-                                className="glass-input"
-                                placeholder="e.g. IT, HR"
-                                value={currentDept.departmentCode || ''}
-                                onChange={e => setCurrentDept({ ...currentDept, departmentCode: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-400">Department Name</label>
-                            <input
-                                required
-                                className="glass-input"
-                                placeholder="e.g. Information Technology"
-                                value={currentDept.departmentName || ''}
-                                onChange={e => setCurrentDept({ ...currentDept, departmentName: e.target.value })}
-                            />
-                        </div>
-                        <div className="md:col-span-2 flex justify-end gap-3 mt-4">
-                            <button
-                                type="button"
-                                onClick={() => setIsEditing(false)}
-                                className="px-6 py-2 rounded-xl text-gray-300 hover:text-white transition-colors"
-                            >
-                                Cancel
-                            </button>
-                            <button type="submit" className="glass-button flex items-center gap-2">
-                                <Check size={18} /> Save Changes
-                            </button>
-                        </div>
-                    </form>
-                </GlassCard>
+                <div className="mb-24">
+                    <GlassCard title={currentDept.departmentId ? 'Reconfigure Unit' : 'New Component Initialization'}>
+                        <form onSubmit={handleSave} className="form-grid-2">
+                            <div className="flex flex-col">
+                                <label className="label-elegant">Component Code</label>
+                                <input
+                                    required
+                                    className="glass-input"
+                                    placeholder="ID-V01-ALPHA"
+                                    value={currentDept.departmentCode || ''}
+                                    onChange={e => setCurrentDept({ ...currentDept, departmentCode: e.target.value })}
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="label-elegant">Unit Designation</label>
+                                <input
+                                    required
+                                    className="glass-input"
+                                    placeholder="Strategic Operations"
+                                    value={currentDept.departmentName || ''}
+                                    onChange={e => setCurrentDept({ ...currentDept, departmentName: e.target.value })}
+                                />
+                            </div>
+                            <div className="col-span-2 flex justify-end gap-10 mt-10">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsEditing(false)}
+                                    className="px-10 py-3 rounded-xl text-gray-500 hover:text-white transition-all font-bold uppercase text-xs tracking-[0.2em]"
+                                >
+                                    Terminate
+                                </button>
+                                <button type="submit" className="glass-button">
+                                    <Check size={20} /> Confirm Sequence
+                                </button>
+                            </div>
+                        </form>
+                    </GlassCard>
+                </div>
             )}
 
-            <GlassCard>
+            <GlassCard title="Active Departmental Matrix">
                 <div className="glass-table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Code</th>
-                                <th>Department Name</th>
-                                <th className="text-right">Actions</th>
+                                <th>Logical Reference</th>
+                                <th>Matrix Designation</th>
+                                <th className="text-right">Control Vector</th>
                             </tr>
                         </thead>
                         <tbody>
                             {departments.map((dept) => (
                                 <tr key={dept.departmentId} className="group">
-                                    <td className="font-mono text-indigo-300">{dept.departmentCode}</td>
-                                    <td className="font-medium">{dept.departmentName}</td>
+                                    <td>
+                                        <span className="font-mono text-cyan-400 bg-cyan-400/5 px-4 py-2 rounded-xl text-xs border border-cyan-400/20">
+                                            {dept.departmentCode}
+                                        </span>
+                                    </td>
+                                    <td className="font-bold text-xl text-white tracking-tight">{dept.departmentName}</td>
                                     <td className="text-right">
-                                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex justify-end gap-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
                                             <button
                                                 onClick={() => { setCurrentDept(dept); setIsEditing(true); }}
-                                                className="p-2 hover:bg-white/10 rounded-lg text-indigo-400 transition-colors"
+                                                className="p-3 hover:bg-blue-500/20 rounded-2xl text-blue-400 transition-all"
                                             >
-                                                <Edit2 size={18} />
+                                                <Edit2 size={20} />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(dept.departmentId)}
-                                                className="p-2 hover:bg-white/10 rounded-lg text-pink-400 transition-colors"
+                                                className="p-3 hover:bg-red-500/20 rounded-2xl text-red-400 transition-all"
                                             >
-                                                <Trash2 size={18} />
+                                                <Trash2 size={20} />
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
                             ))}
-                            {departments.length === 0 && (
-                                <tr>
-                                    <td colSpan={3} className="text-center py-10 text-gray-500">
-                                        No departments found. Add one to get started.
-                                    </td>
-                                </tr>
-                            )}
                         </tbody>
                     </table>
                 </div>

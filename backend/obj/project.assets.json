@@ -1242,7 +1242,7 @@
     ]
   },
   "packageFolders": {
-    "d:\\Thesu\\PacificKode_React\\_dotnet\\.nuget\\packages\\": {},
+    "C:\\Users\\Thesara\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
@@ -1251,7 +1251,7 @@
       "projectUniqueName": "D:\\Thesu\\PacificKode_React\\backend\\PacificKode_Backend.csproj",
       "projectName": "PacificKode_Backend",
       "projectPath": "D:\\Thesu\\PacificKode_React\\backend\\PacificKode_Backend.csproj",
-      "packagesPath": "d:\\Thesu\\PacificKode_React\\_dotnet\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\Thesara\\.nuget\\packages\\",
       "outputPath": "D:\\Thesu\\PacificKode_React\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
