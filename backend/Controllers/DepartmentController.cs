@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PacificKode_Backend.Models;
 using PacificKode_Backend.Repositories;
 
@@ -9,14 +10,20 @@ namespace PacificKode_Backend.Controllers
     public class DepartmentController : ControllerBase
     {
         private readonly IDepartmentRepository _repository;
+        private readonly ILogger<DepartmentController> _logger;
 
-        public DepartmentController(IDepartmentRepository repository)
+        public DepartmentController(IDepartmentRepository repository, ILogger<DepartmentController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_repository.GetAll());
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Retrieving all departments");
+            return Ok(_repository.GetAll());
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -29,6 +36,7 @@ namespace PacificKode_Backend.Controllers
         [HttpPost]
         public IActionResult Create(Department department)
         {
+            _logger.LogInformation("Creating new department: {Name}", department.DepartmentName);
             _repository.Add(department);
             return StatusCode(201);
         }
@@ -44,6 +52,7 @@ namespace PacificKode_Backend.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            _logger.LogWarning("Deleting department ID: {Id}", id);
             _repository.Delete(id);
             return NoContent();
         }

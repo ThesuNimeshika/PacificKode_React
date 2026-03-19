@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PacificKode_Backend.Models;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,12 @@ namespace PacificKode_Backend.Repositories
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<EmployeeRepository> _logger;
 
-        public EmployeeRepository(IConfiguration configuration)
+        public EmployeeRepository(IConfiguration configuration, ILogger<EmployeeRepository> logger)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _logger = logger;
         }
 
         public IEnumerable<Employee> GetAll()
@@ -37,6 +40,7 @@ namespace PacificKode_Backend.Repositories
                     INNER JOIN Department d ON e.DepartmentId = d.DepartmentId";
                 
                 var cmd = new SqlCommand(query, conn);
+                _logger.LogInformation("Executing SQL: {Query}", query);
                 conn.Open();
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -110,6 +114,7 @@ namespace PacificKode_Backend.Repositories
                 cmd.Parameters.AddWithValue("@Salary", employee.Salary);
                 cmd.Parameters.AddWithValue("@DeptId", employee.DepartmentId);
                 
+                _logger.LogInformation("Inserting employee: {FirstName} {LastName}", employee.FirstName, employee.LastName);
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }

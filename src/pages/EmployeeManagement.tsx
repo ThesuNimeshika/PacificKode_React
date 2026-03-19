@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GlassCard from '../components/GlassCard';
 import { api } from '../services/api';
 import { Plus, Edit2, Trash2, Check, Users, X } from 'lucide-react';
+import { showToast } from '../components/Notification';
 
 interface Employee {
     employeeId: number;
@@ -55,8 +56,9 @@ const EmployeeManagement: React.FC = () => {
             setIsEditing(false);
             setCurrentEmp({});
             loadData();
+            showToast('Personnel Record Successfully Deployed', 'success');
         } catch (error) {
-            alert('Error saving employee');
+            showToast('Personnel Protocol Error: Execution Aborted', 'error');
         }
     };
 
@@ -137,10 +139,9 @@ const EmployeeManagement: React.FC = () => {
                                 <label className="label-elegant">Matrix Terminal Assignment</label>
                                 <select
                                     required
-                                    className="glass-input"
+                                    className="glass-input glass-select"
                                     value={currentEmp.departmentId || ''}
                                     onChange={e => setCurrentEmp({ ...currentEmp, departmentId: Number(e.target.value) })}
-                                    style={{ backgroundColor: '#020617' }}
                                 >
                                     <option value="">Awaiting Vector...</option>
                                     {departments.map(d => <option key={d.departmentId} value={d.departmentId}>{d.departmentName}</option>)}

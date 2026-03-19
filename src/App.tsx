@@ -3,11 +3,13 @@ import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-do
 import DepartmentManagement from './pages/DepartmentManagement';
 import EmployeeManagement from './pages/EmployeeManagement';
 import { Users, LayoutGrid, Rocket } from 'lucide-react';
+import Notification from './components/Notification';
 
 const App: React.FC = () => {
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
+        <Notification />
         {/* Navigation */}
         <nav className="nav-glass">
           <div className="flex items-center gap-4">

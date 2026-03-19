@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PacificKode_Backend.Models;
 using PacificKode_Backend.Repositories;
 
@@ -9,14 +10,20 @@ namespace PacificKode_Backend.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _repository;
+        private readonly ILogger<EmployeeController> _logger;
 
-        public EmployeeController(IEmployeeRepository repository)
+        public EmployeeController(IEmployeeRepository repository, ILogger<EmployeeController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_repository.GetAll());
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Retrieving all personnel records");
+            return Ok(_repository.GetAll());
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -29,6 +36,7 @@ namespace PacificKode_Backend.Controllers
         [HttpPost]
         public IActionResult Create(Employee employee)
         {
+            _logger.LogInformation("Deploying new official: {FirstName} {LastName}", employee.FirstName, employee.LastName);
             _repository.Add(employee);
             return StatusCode(201);
         }
@@ -44,6 +52,7 @@ namespace PacificKode_Backend.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            _logger.LogWarning("Aborting personnel record ID: {Id}", id);
             _repository.Delete(id);
             return NoContent();
         }

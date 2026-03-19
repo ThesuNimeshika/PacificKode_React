@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GlassCard from '../components/GlassCard';
 import { api } from '../services/api';
 import { Plus, Edit2, Trash2, Check, LayoutGrid, X } from 'lucide-react';
+import { showToast } from '../components/Notification';
 
 interface Department {
     departmentId: number;
@@ -38,8 +39,9 @@ const DepartmentManagement: React.FC = () => {
             setIsEditing(false);
             setCurrentDept({});
             loadDepartments();
+            showToast('Component Sequence Initialized Successfully', 'success');
         } catch (error) {
-            alert('Error saving department');
+            showToast('Error saving department configuration', 'error');
         }
     };
 
