@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GlassCard from '../components/GlassCard';
 import { api } from '../services/api';
-import { Plus, Edit2, Trash2, Check, LayoutGrid } from 'lucide-react';
+import { Plus, Edit2, Trash2, Check, LayoutGrid, X } from 'lucide-react';
 
 interface Department {
     departmentId: number;
@@ -52,7 +52,7 @@ const DepartmentManagement: React.FC = () => {
 
     return (
         <div className="container-space animate-cinematic">
-            <header className="flex justify-between items-end mb-16 px-4">
+            <header className="flex justify-between items-end mb-24 px-4">
                 <div>
                     <h1 className="text-5xl font-black text-white tracking-tighter flex items-center gap-6">
                         <LayoutGrid className="text-cyan-400" size={48} />
@@ -98,9 +98,9 @@ const DepartmentManagement: React.FC = () => {
                                 <button
                                     type="button"
                                     onClick={() => setIsEditing(false)}
-                                    className="px-10 py-3 rounded-xl text-gray-500 hover:text-white transition-all font-bold uppercase text-xs tracking-[0.2em]"
+                                    className="glass-button-abort"
                                 >
-                                    Terminate
+                                    <X size={20} /> Terminate
                                 </button>
                                 <button type="submit" className="glass-button">
                                     <Check size={20} /> Confirm Sequence

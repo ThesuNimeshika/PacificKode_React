@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GlassCard from '../components/GlassCard';
 import { api } from '../services/api';
-import { Plus, Edit2, Trash2, Check, Users } from 'lucide-react';
+import { Plus, Edit2, Trash2, Check, Users, X } from 'lucide-react';
 
 interface Employee {
     employeeId: number;
@@ -87,7 +87,7 @@ const EmployeeManagement: React.FC = () => {
 
     return (
         <div className="container-space animate-cinematic">
-            <header className="flex justify-between items-end mb-16 px-4">
+            <header className="flex justify-between items-end mb-24 px-4">
                 <div>
                     <h1 className="text-5xl font-black text-white tracking-tighter flex items-center gap-6">
                         <Users className="text-blue-400" size={48} />
@@ -147,7 +147,9 @@ const EmployeeManagement: React.FC = () => {
                                 </select>
                             </div>
                             <div className="col-span-2 flex justify-end gap-10 mt-10">
-                                <button type="button" onClick={() => setIsEditing(false)} className="px-10 py-3 rounded-xl text-gray-500 hover:text-white font-bold uppercase text-xs tracking-[0.2em]">Abort</button>
+                                <button type="button" onClick={() => setIsEditing(false)} className="glass-button-abort">
+                                    <X size={20} /> Abort
+                                </button>
                                 <button type="submit" className="glass-button">
                                     <Check size={20} /> Execute Sequence
                                 </button>
