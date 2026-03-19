@@ -33,7 +33,6 @@ namespace PacificKode_Backend.Repositories
             var employees = new List<Employee>();
             using (var conn = new SqlConnection(_connectionString))
             {
-                // Join with Department to get DepartmentName
                 var query = @"
                     SELECT e.*, d.DepartmentName 
                     FROM Employee e
@@ -41,24 +40,32 @@ namespace PacificKode_Backend.Repositories
                 
                 var cmd = new SqlCommand(query, conn);
                 _logger.LogInformation("Executing SQL: {Query}", query);
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
+                try
                 {
-                    while (reader.Read())
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        employees.Add(new Employee
+                        while (reader.Read())
                         {
-                            EmployeeId = (int)reader["EmployeeId"],
-                            FirstName = reader["FirstName"].ToString(),
-                            LastName = reader["LastName"].ToString(),
-                            EmailAddress = reader["EmailAddress"].ToString(),
-                            DateOfBirth = (DateTime)reader["DateOfBirth"],
-                            Age = (int)reader["Age"],
-                            Salary = (decimal)reader["Salary"],
-                            DepartmentId = (int)reader["DepartmentId"],
-                            DepartmentName = reader["DepartmentName"].ToString()
-                        });
+                            employees.Add(new Employee
+                            {
+                                EmployeeId = (int)reader["EmployeeId"],
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                EmailAddress = reader["EmailAddress"].ToString(),
+                                DateOfBirth = (DateTime)reader["DateOfBirth"],
+                                Age = (int)reader["Age"],
+                                Salary = (decimal)reader["Salary"],
+                                DepartmentId = (int)reader["DepartmentId"],
+                                DepartmentName = reader["DepartmentName"].ToString()
+                            });
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to retrieve employees from database. Connection String: {Conn}", _connectionString);
+                    throw;
                 }
             }
             return employees;
@@ -76,24 +83,32 @@ namespace PacificKode_Backend.Repositories
                 
                 var cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
+                try
                 {
-                    if (reader.Read())
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        return new Employee
+                        if (reader.Read())
                         {
-                            EmployeeId = (int)reader["EmployeeId"],
-                            FirstName = reader["FirstName"].ToString(),
-                            LastName = reader["LastName"].ToString(),
-                            EmailAddress = reader["EmailAddress"].ToString(),
-                            DateOfBirth = (DateTime)reader["DateOfBirth"],
-                            Age = (int)reader["Age"],
-                            Salary = (decimal)reader["Salary"],
-                            DepartmentId = (int)reader["DepartmentId"],
-                            DepartmentName = reader["DepartmentName"].ToString()
-                        };
+                            return new Employee
+                            {
+                                EmployeeId = (int)reader["EmployeeId"],
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                EmailAddress = reader["EmailAddress"].ToString(),
+                                DateOfBirth = (DateTime)reader["DateOfBirth"],
+                                Age = (int)reader["Age"],
+                                Salary = (decimal)reader["Salary"],
+                                DepartmentId = (int)reader["DepartmentId"],
+                                DepartmentName = reader["DepartmentName"].ToString()
+                            };
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to get employee ID: {Id}", id);
+                    throw;
                 }
             }
             return null;
@@ -115,8 +130,16 @@ namespace PacificKode_Backend.Repositories
                 cmd.Parameters.AddWithValue("@DeptId", employee.DepartmentId);
                 
                 _logger.LogInformation("Inserting employee: {FirstName} {LastName}", employee.FirstName, employee.LastName);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "FAILED TO DEPLOY PERSONNEL RECORD. SQL State Error.");
+                    throw;
+                }
             }
         }
 
@@ -138,8 +161,16 @@ namespace PacificKode_Backend.Repositories
                 cmd.Parameters.AddWithValue("@DeptId", employee.DepartmentId);
                 cmd.Parameters.AddWithValue("@Id", employee.EmployeeId);
                 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "FAILED TO UPDATE PERSONNEL RECORD ID: {Id}", employee.EmployeeId);
+                    throw;
+                }
             }
         }
 
@@ -149,8 +180,16 @@ namespace PacificKode_Backend.Repositories
             {
                 var cmd = new SqlCommand("DELETE FROM Employee WHERE EmployeeId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "FAILED TO ABORT PERSONNEL RECORD ID: {Id}", id);
+                    throw;
+                }
             }
         }
     }

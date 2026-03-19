@@ -35,18 +35,26 @@ namespace PacificKode_Backend.Repositories
             {
                 var cmd = new SqlCommand("SELECT * FROM Department", conn);
                 _logger.LogInformation("Fetching all departments from database");
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
+                try
                 {
-                    while (reader.Read())
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        departments.Add(new Department
+                        while (reader.Read())
                         {
-                            DepartmentId = (int)reader["DepartmentId"],
-                            DepartmentCode = reader["DepartmentCode"].ToString(),
-                            DepartmentName = reader["DepartmentName"].ToString()
-                        });
+                            departments.Add(new Department
+                            {
+                                DepartmentId = (int)reader["DepartmentId"],
+                                DepartmentCode = reader["DepartmentCode"].ToString(),
+                                DepartmentName = reader["DepartmentName"].ToString()
+                            });
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to fetch departments. Ensure database 'PacificKode_DB' exists.");
+                    throw;
                 }
             }
             return departments;
@@ -58,18 +66,26 @@ namespace PacificKode_Backend.Repositories
             {
                 var cmd = new SqlCommand("SELECT * FROM Department WHERE DepartmentId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
+                try
                 {
-                    if (reader.Read())
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        return new Department
+                        if (reader.Read())
                         {
-                            DepartmentId = (int)reader["DepartmentId"],
-                            DepartmentCode = reader["DepartmentCode"].ToString(),
-                            DepartmentName = reader["DepartmentName"].ToString()
-                        };
+                            return new Department
+                            {
+                                DepartmentId = (int)reader["DepartmentId"],
+                                DepartmentCode = reader["DepartmentCode"].ToString(),
+                                DepartmentName = reader["DepartmentName"].ToString()
+                            };
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to get department ID: {Id}", id);
+                    throw;
                 }
             }
             return null;
@@ -83,8 +99,16 @@ namespace PacificKode_Backend.Repositories
                 cmd.Parameters.AddWithValue("@Code", department.DepartmentCode);
                 cmd.Parameters.AddWithValue("@Name", department.DepartmentName);
                 _logger.LogInformation("Creating department: {Name} ({Code})", department.DepartmentName, department.DepartmentCode);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "FAILED TO INITIALIZE COMPONENT SEQUENCE.");
+                    throw;
+                }
             }
         }
 
@@ -96,8 +120,16 @@ namespace PacificKode_Backend.Repositories
                 cmd.Parameters.AddWithValue("@Code", department.DepartmentCode);
                 cmd.Parameters.AddWithValue("@Name", department.DepartmentName);
                 cmd.Parameters.AddWithValue("@Id", department.DepartmentId);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "FAILED TO UPDATE COMPONENT SEQUENCE ID: {Id}", department.DepartmentId);
+                    throw;
+                }
             }
         }
 
@@ -107,8 +139,16 @@ namespace PacificKode_Backend.Repositories
             {
                 var cmd = new SqlCommand("DELETE FROM Department WHERE DepartmentId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "FAILED TO TERMINATE COMPONENT SEQUENCE ID: {Id}", id);
+                    throw;
+                }
             }
         }
     }
