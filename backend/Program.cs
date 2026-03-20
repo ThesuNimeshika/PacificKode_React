@@ -1,4 +1,3 @@
-using PacificKode_Backend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,12 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// Register Database Connection
-builder.Services.AddSingleton<DatabaseConnection>();
-
-// Register Repositories
-builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+// Removed Repository DI per user refactoring
 
 // Configure CORS for React
 builder.Services.AddCors(options =>
@@ -19,7 +13,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReact",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // Vite default
+            policy.AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
