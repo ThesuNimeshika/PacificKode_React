@@ -1,10 +1,8 @@
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 using Microsoft.Extensions.Logging;
 using PacificKode_Backend.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace PacificKode_Backend.Repositories
 {
@@ -19,26 +17,26 @@ namespace PacificKode_Backend.Repositories
 
     public class EmployeeRepository : IEmployeeRepository
     {
-        private readonly string _connectionString;
+        private readonly DatabaseConnection _db;
         private readonly ILogger<EmployeeRepository> _logger;
 
-        public EmployeeRepository(IConfiguration configuration, ILogger<EmployeeRepository> logger)
+        public EmployeeRepository(DatabaseConnection db, ILogger<EmployeeRepository> logger)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _db = db;
             _logger = logger;
         }
 
         public IEnumerable<Employee> GetAll()
         {
             var employees = new List<Employee>();
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
                 var query = @"
                     SELECT e.*, d.DepartmentName 
                     FROM Employee e
                     INNER JOIN Department d ON e.DepartmentId = d.DepartmentId";
                 
-                var cmd = new SqlCommand(query, conn);
+                var cmd = new MySqlCommand(query, conn);
                 _logger.LogInformation("Executing SQL: {Query}", query);
                 try
                 {
@@ -64,7 +62,7 @@ namespace PacificKode_Backend.Repositories
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to retrieve employees from database. Connection String: {Conn}", _connectionString);
+                    _logger.LogError(ex, "Failed to retrieve employees from database.");
                     throw;
                 }
             }
@@ -73,7 +71,7 @@ namespace PacificKode_Backend.Repositories
 
         public Employee GetById(int id)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
                 var query = @"
                     SELECT e.*, d.DepartmentName 
@@ -81,7 +79,7 @@ namespace PacificKode_Backend.Repositories
                     INNER JOIN Department d ON e.DepartmentId = d.DepartmentId
                     WHERE e.EmployeeId = @Id";
                 
-                var cmd = new SqlCommand(query, conn);
+                var cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 try
                 {
@@ -116,9 +114,9 @@ namespace PacificKode_Backend.Repositories
 
         public void Add(Employee employee)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand(@"
+                var cmd = new MySqlCommand(@"
                     INSERT INTO Employee (FirstName, LastName, EmailAddress, DateOfBirth, Salary, DepartmentId) 
                     VALUES (@FirstName, @LastName, @Email, @DOB, @Salary, @DeptId)", conn);
                 
@@ -145,9 +143,9 @@ namespace PacificKode_Backend.Repositories
 
         public void Update(Employee employee)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand(@"
+                var cmd = new MySqlCommand(@"
                     UPDATE Employee 
                     SET FirstName = @FirstName, LastName = @LastName, EmailAddress = @Email, 
                         DateOfBirth = @DOB, Salary = @Salary, DepartmentId = @DeptId 
@@ -176,9 +174,9 @@ namespace PacificKode_Backend.Repositories
 
         public void Delete(int id)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand("DELETE FROM Employee WHERE EmployeeId = @Id", conn);
+                var cmd = new MySqlCommand("DELETE FROM Employee WHERE EmployeeId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 try
                 {

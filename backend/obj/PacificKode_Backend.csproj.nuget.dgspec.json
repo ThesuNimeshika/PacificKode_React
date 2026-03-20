@@ -55,9 +55,9 @@
               "target": "Package",
               "version": "[9.0.0, )"
             },
-            "Microsoft.Data.SqlClient": {
+            "MySqlConnector": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[2.5.0, )"
             }
           },
           "imports": [

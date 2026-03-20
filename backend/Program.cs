@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// Register Database Connection
+builder.Services.AddSingleton<DatabaseConnection>();
+
 // Register Repositories
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();

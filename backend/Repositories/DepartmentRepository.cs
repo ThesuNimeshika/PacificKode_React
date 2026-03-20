@@ -1,10 +1,8 @@
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 using Microsoft.Extensions.Logging;
 using PacificKode_Backend.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace PacificKode_Backend.Repositories
 {
@@ -19,21 +17,21 @@ namespace PacificKode_Backend.Repositories
 
     public class DepartmentRepository : IDepartmentRepository
     {
-        private readonly string _connectionString;
+        private readonly DatabaseConnection _db;
         private readonly ILogger<DepartmentRepository> _logger;
 
-        public DepartmentRepository(IConfiguration configuration, ILogger<DepartmentRepository> logger)
+        public DepartmentRepository(DatabaseConnection db, ILogger<DepartmentRepository> logger)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _db = db;
             _logger = logger;
         }
 
         public IEnumerable<Department> GetAll()
         {
             var departments = new List<Department>();
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand("SELECT * FROM Department", conn);
+                var cmd = new MySqlCommand("SELECT * FROM Department", conn);
                 _logger.LogInformation("Fetching all departments from database");
                 try
                 {
@@ -62,9 +60,9 @@ namespace PacificKode_Backend.Repositories
 
         public Department GetById(int id)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand("SELECT * FROM Department WHERE DepartmentId = @Id", conn);
+                var cmd = new MySqlCommand("SELECT * FROM Department WHERE DepartmentId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 try
                 {
@@ -93,9 +91,9 @@ namespace PacificKode_Backend.Repositories
 
         public void Add(Department department)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand("INSERT INTO Department (DepartmentCode, DepartmentName) VALUES (@Code, @Name)", conn);
+                var cmd = new MySqlCommand("INSERT INTO Department (DepartmentCode, DepartmentName) VALUES (@Code, @Name)", conn);
                 cmd.Parameters.AddWithValue("@Code", department.DepartmentCode);
                 cmd.Parameters.AddWithValue("@Name", department.DepartmentName);
                 _logger.LogInformation("Creating department: {Name} ({Code})", department.DepartmentName, department.DepartmentCode);
@@ -114,9 +112,9 @@ namespace PacificKode_Backend.Repositories
 
         public void Update(Department department)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand("UPDATE Department SET DepartmentCode = @Code, DepartmentName = @Name WHERE DepartmentId = @Id", conn);
+                var cmd = new MySqlCommand("UPDATE Department SET DepartmentCode = @Code, DepartmentName = @Name WHERE DepartmentId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Code", department.DepartmentCode);
                 cmd.Parameters.AddWithValue("@Name", department.DepartmentName);
                 cmd.Parameters.AddWithValue("@Id", department.DepartmentId);
@@ -135,9 +133,9 @@ namespace PacificKode_Backend.Repositories
 
         public void Delete(int id)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = (MySqlConnection)_db.CreateConnection())
             {
-                var cmd = new SqlCommand("DELETE FROM Department WHERE DepartmentId = @Id", conn);
+                var cmd = new MySqlCommand("DELETE FROM Department WHERE DepartmentId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 try
                 {
