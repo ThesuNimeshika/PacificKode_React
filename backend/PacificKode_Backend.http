@@ -1,6 +1,0 @@
-@PacificKode_Backend_HostAddress = http://localhost:5127
-
-GET {{PacificKode_Backend_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,73 +1,98 @@
-# React + TypeScript + Vite
+# PacificKode React & .NET Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, high-performance management system built with a **React (Vite)** frontend and a **.NET Core API** backend, utilizing **MariaDB** for data persistence.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Features
 
-## React Compiler
+- **Department Management**: Create, view, update, and delete organizational departments.
+- **Employee Management**: Manage personnel records with full CRUD functionality, linked to departments.
+- **Real-time Validation**: Integrated form validation and error handling.
+- **Modern UI**: Cinematic, glassmorphism-inspired design with smooth animations.
+- **Manual Data Access**: Robust direct-connection pattern for database operations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18+)
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [MariaDB](https://mariadb.org/) or [XAMPP](https://www.apachefriends.org/) (for MySQL/MariaDB)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ⚙️ Installation & Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 1. Database Configuration
+1. Start your MariaDB/MySQL server.
+2. Create the database and tables using the provided script:
+   ```bash
+   mysql -u root -p < MariaDB.sql
+   ```
+   *(Note: The default setup expects a user `root` with no password. If you have a password, update it in `backend/Data/CONNECTION.cs`)*
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Restore dependencies:
+   ```bash
+   dotnet restore
+   ```
+3. Run the backend:
+   ```bash
+   dotnet run
+   ```
+   *(The backend API will be available at `http://localhost:5128`)*
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 3. Frontend Setup
+1. Open a new terminal and navigate to the root directory:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   *(The frontend will be available at `http://localhost:5173`)*
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## 📖 User Manual
+
+### Managing Departments
+1. Navigate to the **Departments** section from the sidebar/main menu.
+2. Click **Add Department** to create a new entry.
+3. Use the **Edit** (pencil icon) to modify existing departments.
+4. Use the **Delete** (trash icon) to remove a department (Warning: This will fail if employees are still assigned to it).
+
+### Managing Employees
+1. Navigate to the **Personnel** or **Employees** section.
+2. Click **Add Employee** to register a new staff member.
+3. Ensure you select a valid **Department** from the dropdown.
+4. Personnel records display their age automatically calculated from their Date of Birth.
+
+---
+
+## 🗄️ Project Structure
+
+- `/src`: React frontend (Vite, TypeScript, Tailwind CSS)
+- `/backend`: .NET Core Web API
+- `/backend/Data/CONNECTION.cs`: Centralized database connection logic.
+- `/backend/Controllers`: API endpoints for Departments and Employees.
+- `MariaDB.sql`: SQL script for database initialization.
+
+---
+
+## 🛠️ Troubleshooting
+
+- **Port Conflict**: If port `5128` is occupied, you can change the `applicationUrl` in `backend/Properties/launchSettings.json`.
+- **Database Connection**: Ensure your MariaDB service is running and the credentials in `backend/Data/CONNECTION.cs` match your local environment.
+- **CORS Errors**: The backend is configured to allow requests from `http://localhost:5173`. If your frontend runs on a different port, update `backend/Program.cs`.
+
+---
+
+© 2026 PacificKode Systems. All rights reserved.
