@@ -39,7 +39,7 @@ const DepartmentManagement: React.FC = () => {
             setIsEditing(false);
             setCurrentDept({});
             loadDepartments();
-            showToast('Component Sequence Initialized Successfully', 'success');
+            showToast('Department Saved Successfully', 'success');
         } catch (error) {
             showToast('Error saving department configuration', 'error');
         }
@@ -67,17 +67,17 @@ const DepartmentManagement: React.FC = () => {
                         onClick={() => { setIsEditing(true); setCurrentDept({}); }}
                         className="glass-button"
                     >
-                        <Plus size={20} /> Initialize Unit
+                        <Plus size={20} /> Add Department
                     </button>
                 )}
             </header>
 
             {isEditing && (
                 <div className="mb-24">
-                    <GlassCard title={currentDept.departmentId ? 'Reconfigure Unit' : 'New Component Initialization'}>
+                    <GlassCard title={currentDept.departmentId ? 'Edit Department' : 'Add New Department'}>
                         <form onSubmit={handleSave} className="form-grid-2">
                             <div className="flex flex-col">
-                                <label className="label-elegant">Component Code</label>
+                                <label className="label-elegant">Department Code</label>
                                 <input
                                     required
                                     className="glass-input"
@@ -87,7 +87,7 @@ const DepartmentManagement: React.FC = () => {
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <label className="label-elegant">Unit Designation</label>
+                                <label className="label-elegant">Department Name</label>
                                 <input
                                     required
                                     className="glass-input"
@@ -102,10 +102,10 @@ const DepartmentManagement: React.FC = () => {
                                     onClick={() => setIsEditing(false)}
                                     className="glass-button-abort"
                                 >
-                                    <X size={20} /> Terminate
+                                    <X size={20} /> Cancel
                                 </button>
                                 <button type="submit" className="glass-button">
-                                    <Check size={20} /> Confirm Sequence
+                                    <Check size={20} /> Save Department
                                 </button>
                             </div>
                         </form>
@@ -113,14 +113,14 @@ const DepartmentManagement: React.FC = () => {
                 </div>
             )}
 
-            <GlassCard title="Active Departmental Matrix">
+            <GlassCard title="Active Departments">
                 <div className="glass-table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Logical Reference</th>
-                                <th>Matrix Designation</th>
-                                <th className="text-right">Control Vector</th>
+                                <th>Department Code</th>
+                                <th>Department Name</th>
+                                <th className="text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody>

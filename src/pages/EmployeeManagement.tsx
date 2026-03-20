@@ -56,9 +56,9 @@ const EmployeeManagement: React.FC = () => {
             setIsEditing(false);
             setCurrentEmp({});
             loadData();
-            showToast('Personnel Record Successfully Deployed', 'success');
+            showToast('Employee Saved Successfully', 'success');
         } catch (error) {
-            showToast('Personnel Protocol Error: Execution Aborted', 'error');
+            showToast('Error saving employee', 'error');
         }
     };
 
@@ -93,66 +93,66 @@ const EmployeeManagement: React.FC = () => {
                 <div>
                     <h1 className="text-5xl font-black text-white tracking-tighter flex items-center gap-6">
                         <Users className="text-blue-400" size={48} />
-                        Personnel
+                        Employees
                     </h1>
-                    <p className="text-cyan-500/40 font-black mt-4 tracking-[0.4em] uppercase text-[10px]">Intelligence Matrix</p>
+                    <p className="text-cyan-500/40 font-black mt-4 tracking-[0.4em] uppercase text-[10px]">Personnel Management</p>
                 </div>
                 {!isEditing && (
                     <button
                         onClick={() => { setIsEditing(true); setCurrentEmp({ dateOfBirth: '', age: 0 }); }}
                         className="glass-button"
                     >
-                        <Plus size={20} /> Deploy Official
+                        <Plus size={20} /> Add Employee
                     </button>
                 )}
             </header>
 
             {isEditing && (
                 <div className="mb-24">
-                    <GlassCard title={currentEmp.employeeId ? 'Reconfigure Official' : 'Personnel Protocol Initialization'}>
+                    <GlassCard title={currentEmp.employeeId ? 'Edit Employee' : 'Add New Employee'}>
                         <form onSubmit={handleSave} className="form-grid-2">
                             <div className="flex flex-col">
-                                <label className="label-elegant">First Identity</label>
+                                <label className="label-elegant">First Name</label>
                                 <input required className="glass-input" value={currentEmp.firstName || ''} onChange={e => setCurrentEmp({ ...currentEmp, firstName: e.target.value })} />
                             </div>
                             <div className="flex flex-col">
-                                <label className="label-elegant">Last Identity</label>
+                                <label className="label-elegant">Last Name</label>
                                 <input required className="glass-input" value={currentEmp.lastName || ''} onChange={e => setCurrentEmp({ ...currentEmp, lastName: e.target.value })} />
                             </div>
                             <div className="flex flex-col">
-                                <label className="label-elegant">Communication Link</label>
+                                <label className="label-elegant">Email Address</label>
                                 <input required type="email" className="glass-input" value={currentEmp.emailAddress || ''} onChange={e => setCurrentEmp({ ...currentEmp, emailAddress: e.target.value })} />
                             </div>
                             <div className="flex flex-col">
-                                <label className="label-elegant">Maturity Origin (DOB)</label>
+                                <label className="label-elegant">Date of Birth</label>
                                 <input required type="date" className="glass-input" value={currentEmp.dateOfBirth?.split('T')[0] || ''} onChange={handleDOBChange} />
                             </div>
                             <div className="flex flex-col">
-                                <label className="label-elegant">Computed Cycle (Age)</label>
+                                <label className="label-elegant">Age</label>
                                 <input readOnly className="glass-input bg-cyan-900/10 opacity-60 text-cyan-300 font-mono" value={currentEmp.age || 0} />
                             </div>
                             <div className="flex flex-col">
-                                <label className="label-elegant">Resource Valuation (USD)</label>
+                                <label className="label-elegant">Salary</label>
                                 <input required type="number" className="glass-input" value={currentEmp.salary || ''} onChange={e => setCurrentEmp({ ...currentEmp, salary: Number(e.target.value) })} />
                             </div>
                             <div className="flex flex-col col-span-2">
-                                <label className="label-elegant">Matrix Terminal Assignment</label>
+                                <label className="label-elegant">Department</label>
                                 <select
                                     required
                                     className="glass-input glass-select"
                                     value={currentEmp.departmentId || ''}
                                     onChange={e => setCurrentEmp({ ...currentEmp, departmentId: Number(e.target.value) })}
                                 >
-                                    <option value="">Awaiting Vector...</option>
+                                    <option value="">Select Department...</option>
                                     {departments.map(d => <option key={d.departmentId} value={d.departmentId}>{d.departmentName}</option>)}
                                 </select>
                             </div>
                             <div className="col-span-2 flex justify-end gap-10 mt-10">
                                 <button type="button" onClick={() => setIsEditing(false)} className="glass-button-abort">
-                                    <X size={20} /> Abort
+                                    <X size={20} /> Cancel
                                 </button>
                                 <button type="submit" className="glass-button">
-                                    <Check size={20} /> Execute Sequence
+                                    <Check size={20} /> Save Employee
                                 </button>
                             </div>
                         </form>
@@ -160,17 +160,17 @@ const EmployeeManagement: React.FC = () => {
                 </div>
             )}
 
-            <GlassCard title="Global Personnel Registry">
+            <GlassCard title="Employee Directory">
                 <div className="glass-table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Official Identity</th>
-                                <th>Channel</th>
-                                <th>Assignment</th>
-                                <th>Valuation</th>
-                                <th>Cycle</th>
-                                <th className="text-right">Operation</th>
+                                <th>Employee Name</th>
+                                <th>Email Address</th>
+                                <th>Department</th>
+                                <th>Salary</th>
+                                <th>Age</th>
+                                <th className="text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody>
